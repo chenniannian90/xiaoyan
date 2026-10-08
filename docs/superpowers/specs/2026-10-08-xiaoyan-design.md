@@ -62,7 +62,7 @@
 - `topic.json`：元信息（slug/标题/年级/分类/难度/emoji）、`learn.steps`（动画步骤序列，每步引用积木 + 参数 + 逐句文案 + 音频文件名）、`practice.items`（题目集，每题引用交互模板 + 题目数据 + 提示文案）
 - `audio/s01.mp3, s02.mp3, …`：龙呼呼按句预生成的语音，与步骤一一对齐
 
-`topic.json` 的 JSON Schema 放 `content-schema/`，作为用户与 Claude 的共同契约；首版 schema 随第一个真实内容包打磨定型（当前先定草案，见实现计划）。
+`topic.json` 的 JSON Schema 放 `content-schema/`，作为用户与 Claude 的共同契约；草案随冒烟示例包落地，随第一个真实内容包打磨定型。
 
 **内容不预设**：本设计不做任何内容选题规划；v1 只带 1 个最小示例包做链路冒烟（证明数据→动画→语音→判题跑通），真实内容全部由用户按女儿作业与反馈决定。
 
