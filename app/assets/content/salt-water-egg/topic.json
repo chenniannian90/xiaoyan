@@ -1,0 +1,82 @@
+{
+  "kind": "science",
+  "slug": "salt-water-egg",
+  "title": "盐水浮鸡蛋",
+  "grade": 2,
+  "category": "物质与密度",
+  "difficulty": 1,
+  "emoji": "🥚",
+  "learn": {
+    "steps": [
+      {
+        "bricks": [
+          { "brick": "shared.scene", "params": { "objects": ["bench", "cup", "egg"] } }
+        ],
+        "text": "小妍,今天我们来变一个魔术,让一颗鸡蛋自己浮起来。",
+        "audio": "s01.mp3"
+      },
+      {
+        "bricks": [
+          { "brick": "science.liquid", "params": { "container": "cup", "kind": "water", "solute": "none", "level": 0.7 } },
+          { "brick": "science.egg", "params": { "container": "cup", "position": "bottom", "motion": "sink" } }
+        ],
+        "text": "你看,这是清水。把鸡蛋放进去,噗通,它沉到了杯底。",
+        "audio": "s02.mp3"
+      },
+      {
+        "bricks": [
+          { "brick": "shared.highlight", "params": { "target": "egg", "label": "鸡蛋更重" } }
+        ],
+        "text": "为什么沉呢?因为鸡蛋比清水重一点点。",
+        "audio": "s03.mp3"
+      },
+      {
+        "bricks": [
+          { "brick": "science.pour", "params": { "container": "cup", "item": "salt", "spoons": 3, "stir": true } }
+        ],
+        "text": "现在往水里加一样东西:盐。一勺、两勺、三勺,搅一搅,盐化进水里了。",
+        "audio": "s04.mp3"
+      },
+      {
+        "bricks": [
+          { "brick": "science.liquid", "params": { "container": "cup", "kind": "water", "solute": "salt", "level": 0.7 } },
+          { "brick": "science.egg", "params": { "container": "cup", "position": "surface", "motion": "float" } }
+        ],
+        "text": "再把鸡蛋放进去,它浮起来了!水有了盐,就变重了,托得住鸡蛋了。",
+        "audio": "s05.mp3"
+      }
+    ]
+  },
+  "experiment": {
+    "materials": [
+      { "name": "鸡蛋", "amount": "1 个", "note": "用熟的,不容易摔破" },
+      { "name": "透明杯子", "amount": "1 个", "note": "一定要透明,才看得见鸡蛋" },
+      { "name": "温水", "amount": "大半杯", "note": "温水化盐更快" },
+      { "name": "盐", "amount": "一大把,约 6 勺", "note": "盐少了浮不起来" },
+      { "name": "勺子", "amount": "1 根", "note": "用来搅拌" },
+      { "name": "托盘或抹布", "amount": "1 块", "note": "防洒" }
+    ],
+    "safety": [
+      "鸡蛋要轻轻放进杯子,不能扔,会碎会脏",
+      "水别倒太满,大半杯就好",
+      "盐水和生鸡蛋都不能放进嘴里",
+      "做完擦干净桌子,洗洗手"
+    ],
+    "adultNote": "温水化盐更快;盐一定要加够,基本加到化不完为止,鸡蛋才浮得起来。杯子必须透明。",
+    "steps": [
+      { "text": "往杯子里倒大半杯温水。", "audio": "e01.mp3" },
+      { "text": "把鸡蛋轻轻放进水里。", "audio": "e02.mp3" },
+      { "text": "看一看,鸡蛋在哪儿呀?", "audio": "e03.mp3", "record": true },
+      { "text": "把鸡蛋拿出来,往水里加盐,一勺一勺加,搅到盐看不见。", "audio": "e04.mp3" },
+      { "text": "盐要多加一点,加到化不完为止。", "audio": "e05.mp3" },
+      { "text": "再把鸡蛋轻轻放进去,看看它怎么样了!", "audio": "e06.mp3", "record": true }
+    ],
+    "recordOptions": [
+      { "id": "sunk", "label": "沉在杯底了", "emoji": "🥚" },
+      { "id": "floated", "label": "浮在水面上了", "emoji": "🎈" },
+      { "id": "suspended", "label": "悬在中间,不上不下", "emoji": "⚖️" },
+      { "id": "unchanged", "label": "好像没变化", "emoji": "🤔" },
+      { "id": "cloudy", "label": "水变浑了,盐化不完", "emoji": "🧂" }
+    ]
+  }
+}
