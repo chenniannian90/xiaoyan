@@ -179,9 +179,32 @@ xiaoyan/
 
 ## 13. 工具链与仓库位置
 
-- 仓库从 `/mnt/c/...` 挪进 WSL 文件系统（`~/src/...`）：`/mnt/c` 上 Flutter 构建慢 5-10 倍
-- WSL 安装 Flutter SDK + Android cmdline-tools（Java 17 已有，KVM 可用，模拟器可跑）；真机装 debug APK 最省事
+- 仓库只留 WSL 文件系统这一份：`~/src/github.com/chenniannian90/xiaoyan`（`/mnt/c` 上 Flutter 构建慢 5-10 倍，`/mnt/c` 那份已删）
+- WSL 侧装的是 Flutter 3.47.7 stable + Android SDK 36（platforms / build-tools / ndk）+ JDK 17，licenses 已接受
+- **开发期验收走「只出 APK」**（2026-10-10 用户定）：`flutter build apk --release --split-per-abi`，产物拷进手机装；不搭模拟器、不配 usbipd 真机调试
 - Windows 侧 IDE 可经 `\\wsl$` 路径打开同一仓库
+
+**实测：国内直连三个源都很慢，必须走镜像（2026-10-10）**
+
+| 东西 | 官方源 | 换用的镜像 | 实测 |
+|---|---|---|---|
+| Flutter SDK / 引擎构件 | storage.googleapis.com | storage.flutter-io.cn | 27 MB/s（官方约 0.95 Mbps） |
+| pub 包 | pub.dev | pub.flutter-io.cn | —— |
+| Gradle 分发包 | services.gradle.org | mirrors.cloud.tencent.com/gradle | 26 MB/s（官方那条基本不动） |
+| Maven 依赖 | google() / mavenCentral() | maven.aliyun.com/repository/{public,google,gradle-plugin} | 实测 200 |
+
+写在哪（**新工程要照着改一遍，否则第一次构建会卡住**）：
+
+- `~/.bashrc`：`FLUTTER_STORAGE_BASE_URL` / `PUB_HOSTED_URL`。这个同时决定 Flutter gradle 插件往仓库列表里加的 `download.flutter.io` 指向哪（插件源码 `FlutterPlugin.kt:91`），release 包缺的 `io.flutter:*_release` 构件就从这里取
+- `android/gradle/wrapper/gradle-wrapper.properties`：`distributionUrl` 换腾讯镜像
+- `android/settings.gradle.kts` 的 `pluginManagement.repositories` 与 `android/build.gradle.kts` 的 `allprojects.repositories`：阿里云三条放最前，官方源留在后面兜底
+
+**环境层踩过的坑（2026-10-10）**
+
+- 只装了 `openjdk-17-jre-headless`（JRE 无 javac），Gradle 报 `Toolchain ... does not provide the required capabilities: [JAVA_COMPILER]`；装 `openjdk-17-jdk-headless` 解决
+- 补上 javac 后仍报同一个错：Gradle 守护进程在装 javac **之前**就起来了，把工具链探测结果缓存住了（默认存活 3 小时）。`./gradlew --stop` 杀掉后立刻正常——改环境变量/JDK 后要想着杀守护进程
+- release 构建偶发失败在 `Could not GET https://dl.google.com/...`：网络抖动导致 Gradle 直接中止（不是 404 跳过），重跑一次即过。真构件来自 `storage.flutter-io.cn`，与 dl.google.com 无关
+- 空工程 debug APK 144 MB（三 ABI + JIT）、release 分 ABI 后 12.7 / 15.5 / 16.9 MB——手机上装 release 那个（arm64），别装 debug
 
 ## 14. 规范迁移
 
