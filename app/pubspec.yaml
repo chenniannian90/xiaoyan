@@ -1,0 +1,26 @@
+name: xiaoyan
+description: "小妍乐园 —— 给小学生看的动画学习应用:数学乐园 + 科学小实验。"
+publish_to: 'none'
+
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  # 内容包资源。Flutter 的 assets 不递归,每个内容包的两层目录都要显式列出。
+  # 加内容包时这里必须同步加两行,否则包不会被打进 APK(validate_content.py 会查)。
+  assets:
+    - assets/content/salt-water-egg/
+    - assets/content/salt-water-egg/audio/
