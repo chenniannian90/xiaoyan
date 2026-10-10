@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://xiaoyan.local/content-schema/topic.schema.json",
+  "title": "小妍乐园内容包 topic.json",
+  "description": "数学包与科学包共用一份 schema,按顶层 kind 分支:公共字段只定义一次,校验工具单点。",
+  "type": "object",
+  "required": ["kind", "slug", "title", "grade", "category", "difficulty", "emoji", "learn"],
+  "properties": {
+    "kind": { "enum": ["math", "science"] },
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "grade": { "type": "integer", "minimum": 1, "maximum": 6 },
+    "category": { "type": "string", "minLength": 1 },
+    "difficulty": { "type": "integer", "minimum": 1, "maximum": 3 },
+    "emoji": { "type": "string", "minLength": 1 },
+    "learn": {
+      "type": "object",
+      "required": ["steps"],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/learnStep" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "practice": { "$ref": "#/definitions/practice" },
+    "experiment": { "$ref": "#/definitions/experiment" }
+  },
+  "oneOf": [
+    {
+      "properties": { "kind": { "const": "math" } },
+      "required": ["practice"]
+    },
+    {
+      "properties": { "kind": { "const": "science" } },
+      "required": ["experiment"]
+    }
+  ],
+  "definitions": {
+    "audioFile": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*\\.(wav|mp3)$"
+    },
+    "brickCall": {
+      "type": "object",
+      "description": "调用一块积木并给参数。一步可以有多个 brickCall,按顺序执行(同一镜头里的连续动作)。",
+      "required": ["brick"],
+      "properties": {
+        "brick": { "type": "string", "minLength": 1 },
+        "params": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "learnStep": {
+      "type": "object",
+      "description": "学环节的一步:执行 1..n 块积木 + 同步一句语音",
+      "required": ["bricks", "text", "audio"],
+      "properties": {
+        "bricks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/brickCall" }
+        },
+        "text": { "type": "string", "minLength": 1 },
+        "audio": { "$ref": "#/definitions/audioFile" }
+      },
+      "additionalProperties": false
+    },
+    "practice": {
+      "type": "object",
+      "description": "数学包专有:练习题目集",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["template", "data"],
+            "properties": {
+              "template": { "type": "string", "minLength": 1 },
+              "data": { "type": "object" },
+              "hint": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "experiment": {
+      "type": "object",
+      "description": "科学包专有:动手做环节",
+      "required": ["materials", "safety", "steps", "recordOptions"],
+      "properties": {
+        "materials": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "amount"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "amount": { "type": "string", "minLength": 1 },
+              "note": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "safety": {
+          "type": "array",
+          "minItems": 1,
+          "description": "安全提示,强制非空:没写安全提示的实验包不许打包",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "adultNote": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["text", "audio"],
+            "properties": {
+              "text": { "type": "string", "minLength": 1 },
+              "audio": { "$ref": "#/definitions/audioFile" },
+              "bricks": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "$ref": "#/definitions/brickCall" }
+              },
+              "record": {
+                "type": "boolean",
+                "description": "为 true 时,这一步做完要拍照 + 选现象,进实验册"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "recordOptions": {
+          "type": "array",
+          "minItems": 2,
+          "description": "记录时可选的现象",
+          "items": {
+            "type": "object",
+            "required": ["id", "label"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+              "label": { "type": "string", "minLength": 1 },
+              "emoji": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "note": "积木注册表的契约文件。内容包引用的积木必须在这里登记,否则 tools/validate_content.py 不放行。App 侧的积木注册表以此为准:先登记名字,再实现积木。只登记已定名的积木,别提前登记还没想清楚的。",
+  "version": 1,
+  "bricks": [
+    {
+      "name": "shared.scene",
+      "desc": "布景:摆出实验台与器材",
+      "params": { "objects": "对象名数组,如 [\"bench\",\"cup\",\"egg\"]" }
+    },
+    {
+      "name": "shared.highlight",
+      "desc": "高亮某个对象,并显示一句短标签",
+      "params": { "target": "对象名", "label": "标签文字" }
+    },
+    {
+      "name": "science.liquid",
+      "desc": "设置容器里的液体(液面高度 / 溶质)",
+      "params": {
+        "container": "容器名",
+        "kind": "water",
+        "solute": "none | salt",
+        "level": "0..1,液面高度"
+      }
+    },
+    {
+      "name": "science.egg",
+      "desc": "鸡蛋在容器里的位置与动作",
+      "params": {
+        "container": "容器名",
+        "position": "bottom | middle | surface",
+        "motion": "sink | float | none"
+      }
+    },
+    {
+      "name": "science.pour",
+      "desc": "往容器里倒东西(盐 / 水),可选搅拌",
+      "params": {
+        "container": "容器名",
+        "item": "salt | water",
+        "spoons": "勺数",
+        "stir": "是否搅拌"
+      }
+    }
+  ]
+}
