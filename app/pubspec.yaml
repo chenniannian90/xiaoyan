@@ -8,8 +8,14 @@ environment:
   sdk: ^3.13.5
 
 dependencies:
+  audioplayers: ^6.8.1
   flutter:
     sdk: flutter
+  flutter_tts: ^4.2.5
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  image_picker: ^1.2.4
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:
@@ -22,5 +28,7 @@ flutter:
   # 内容包资源。Flutter 的 assets 不递归,每个内容包的两层目录都要显式列出。
   # 加内容包时这里必须同步加两行,否则包不会被打进 APK(validate_content.py 会查)。
   assets:
+    - assets/content/add-within-5/
+    - assets/content/add-within-5/audio/
     - assets/content/salt-water-egg/
     - assets/content/salt-water-egg/audio/

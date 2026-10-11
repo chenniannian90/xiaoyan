@@ -83,13 +83,39 @@ void main() {
     test('列出全部内容包,能按 kind 分成数学/科学两拨', () async {
       final List<Topic> all = await ContentRepository().loadAll();
 
-      expect(all.map((Topic t) => t.slug), contains('salt-water-egg'));
+      expect(all.map((Topic t) => t.slug), containsAll(<String>['salt-water-egg', 'add-within-5']));
       expect(
         all.where((Topic t) => t.kind == TopicKind.science).map((Topic t) => t.slug),
         contains('salt-water-egg'),
       );
-      // v1 的数学最小示例包还没落地,这里先钉住「现在是空的」
-      expect(all.where((Topic t) => t.kind == TopicKind.math), isEmpty);
+      expect(
+        all.where((Topic t) => t.kind == TopicKind.math).map((Topic t) => t.slug),
+        contains('add-within-5'),
+      );
+    });
+
+    test('add-within-5 读成 math 包:学动画用数学积木,练习有三题', () async {
+      final Topic topic = await ContentRepository().load('add-within-5');
+
+      expect(topic.kind, TopicKind.math);
+      expect(topic.title, contains('加法'));
+      expect(topic.experiment, isNull, reason: '数学包没有做—记环节');
+      expect(topic.practice, isNotNull);
+
+      final Practice practice = topic.practice!;
+      expect(practice.items, hasLength(3));
+      expect(practice.items.every((PracticeItem i) => i.template == 'counters-add'), isTrue);
+      expect(practice.items.first.data['answer'], 3);
+      expect(practice.items.first.hint, isNotNull);
+
+      // 学环节的动画走的是数学积木,不是科学的杯子
+      expect(topic.learn.steps, hasLength(3));
+      expect(
+        topic.learn.steps.last.bricks.first.brick,
+        'math.counters',
+        reason: '第 3 步演示「合起来」,应该用并群的积木',
+      );
+      expect(topic.learn.steps.last.bricks.first.params['join'], true);
     });
   });
 

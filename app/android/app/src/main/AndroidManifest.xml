@@ -41,5 +41,13 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- Android 11 起有"包可见性"过滤:不在这儿声明,image_picker 用
+             queryIntentActivities 找相机应用会拿到空列表 —— 拍照按钮就永远打不开
+             (插件自己的 manifest 里没有这一条,得在 App 这边补)。
+             出处:image_picker_android 0.8.13+25 的 ImagePickerDelegate.java:619
+             走的就是 queryIntentActivities(读的包内源码)。 -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE"/>
+        </intent>
     </queries>
 </manifest>
