@@ -52,27 +52,34 @@ class _MascotSheet extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const _Heading('头顶那对角怎么做?挑一个'),
+            const _Heading('头顶那对角怎么做?(用户 2026-10-11 挑了圆角)'),
             Wrap(
               spacing: DesignTokens.gap,
               runSpacing: DesignTokens.gap,
               children: const <Widget>[
                 _Specimen(
-                  '① 尖角朝上',
+                  '① 圆头短角(已选)',
+                  DragonVariant.coiled,
+                  DragonPose.idle,
+                  150,
+                  horns: DragonHorns.round,
+                ),
+                _Specimen(
+                  '② 尖角朝上',
                   DragonVariant.coiled,
                   DragonPose.idle,
                   150,
                   horns: DragonHorns.pointed,
                 ),
                 _Specimen(
-                  '② 往外后掠',
+                  '③ 往外后掠',
                   DragonVariant.coiled,
                   DragonPose.idle,
                   150,
                   horns: DragonHorns.swept,
                 ),
                 _Specimen(
-                  '③ 不要角',
+                  '④ 不要角',
                   DragonVariant.coiled,
                   DragonPose.idle,
                   150,
@@ -144,7 +151,7 @@ class _Specimen extends StatelessWidget {
     this.variant,
     this.pose,
     this.size, {
-    this.horns = DragonHorns.pointed,
+    this.horns = DragonHorns.round,
   });
 
   final String label;

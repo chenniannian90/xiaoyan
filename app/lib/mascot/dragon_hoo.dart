@@ -23,10 +23,13 @@ enum DragonPose {
 }
 
 /// 头顶那对角怎么做。名字叫龙呼呼,画条蛇不画角总觉得少了点什么;
-/// 可是圆脑袋上放一对尖东西,一眼就是猫耳朵/兔耳朵。三种都试过,
-/// 留给用户挑 —— 反正换一个参数的事。
+/// 可是圆脑袋上放一对尖东西,一眼就是猫耳朵/兔耳朵。四种都试过,
+/// 用户 2026-10-11 拍板要圆角 —— 反正换一个参数的事。
 enum DragonHorns {
-  /// 朝上、带尖(默认)。
+  /// 又短又钝的圆头小角,贴着头顶往两边微微一岔(默认,用户挑的)。
+  round,
+
+  /// 朝上、带尖。
   pointed,
 
   /// 往两边后掠,像小恶魔角。
@@ -53,7 +56,7 @@ class DragonHoo extends StatelessWidget {
     super.key,
     this.variant = DragonVariant.coiled,
     this.pose = DragonPose.idle,
-    this.horns = DragonHorns.pointed,
+    this.horns = DragonHorns.round,
     this.size = 160,
   });
 
@@ -271,6 +274,36 @@ class _DragonHooPainter extends CustomPainter {
       return;
     }
     final Offset c = _headCenter;
+    if (horns == DragonHorns.round) {
+      // 圆头小短角:粗短的胶囊,从头顶往两边微微一岔。
+      // 猫耳朵是「圆片贴在头两侧」又高又圆;角要短、要钝、要贴着头顶中线,
+      // 才读得出是角不是耳朵。
+      for (final double s in <double>[-1, 1]) {
+        canvas.save();
+        canvas.translate(c.dx + s * _headRx * 0.30, c.dy - _headRy * 0.78);
+        canvas.rotate(s * 0.38);
+        final Rect horn = Rect.fromCenter(
+          center: Offset(0, -_headRy * 0.22),
+          width: _headRx * 0.30,
+          height: _headRy * 0.46,
+        );
+        final RRect cap = RRect.fromRectAndRadius(
+          horn,
+          Radius.circular(horn.width / 2),
+        );
+        // 和另外两款一样:先描边后填色,描边只露出外半圈
+        canvas.drawRRect(
+          cap,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = _line * 1.8
+            ..color = _ink,
+        );
+        canvas.drawRRect(cap, Paint()..color = _horn);
+        canvas.restore();
+      }
+      return;
+    }
     final bool swept = horns == DragonHorns.swept;
     for (final double s in <double>[-1, 1]) {
       final Path horn;
