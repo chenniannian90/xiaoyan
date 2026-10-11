@@ -45,11 +45,15 @@
     },
     "brickCall": {
       "type": "object",
-      "description": "调用一块积木并给参数。一步可以有多个 brickCall,按顺序执行(同一镜头里的连续动作)。",
+      "description": "调用一块积木并给参数。一步可以有多个 brickCall,默认一块演完再演下一块(同一镜头里的连续动作);写了 parallel 的那块跟上一块同时开始。",
       "required": ["brick"],
       "properties": {
         "brick": { "type": "string", "minLength": 1 },
-        "params": { "type": "object" }
+        "params": { "type": "object" },
+        "parallel": {
+          "type": "boolean",
+          "description": "true = 跟上一块积木同时开始,而不是等它演完"
+        }
       },
       "additionalProperties": false
     },

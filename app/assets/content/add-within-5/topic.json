@@ -1,0 +1,62 @@
+{
+  "kind": "math",
+  "slug": "add-within-5",
+  "title": "合起来数一数(5 以内加法)",
+  "grade": 1,
+  "category": "数与代数",
+  "difficulty": 1,
+  "emoji": "🟡",
+  "learn": {
+    "steps": [
+      {
+        "bricks": [
+          {
+            "brick": "math.counters",
+            "params": { "a": 3 }
+          }
+        ],
+        "text": "小妍,看!这里有几颗黄点子?我们伸出手指,一颗、两颗、三颗,一起数出来是三颗。",
+        "audio": "m01.mp3"
+      },
+      {
+        "bricks": [
+          {
+            "brick": "math.counters",
+            "params": { "a": 3, "b": 2 }
+          }
+        ],
+        "text": "现在右边又来了两颗。中间有个加号,加号的意思就是「合起来」。先数左边的三颗,再接着数右边的:四颗、五颗!",
+        "audio": "m02.mp3"
+      },
+      {
+        "bricks": [
+          {
+            "brick": "math.counters",
+            "params": { "a": 3, "b": 2, "join": true }
+          }
+        ],
+        "text": "看,两群点子并到了一起,变成了一大群。三颗加两颗,合起来一共是五颗。加法就是把两堆东西合起来数一数!",
+        "audio": "m03.mp3"
+      }
+    ]
+  },
+  "practice": {
+    "items": [
+      {
+        "template": "counters-add",
+        "data": { "a": 2, "b": 1, "answer": 3, "choices": [2, 3, 4] },
+        "hint": "先数左边的,再接着数右边的那几颗"
+      },
+      {
+        "template": "counters-add",
+        "data": { "a": 1, "b": 4, "answer": 5, "choices": [4, 5, 3] },
+        "hint": "左边只有一颗,那就从一接着往下数"
+      },
+      {
+        "template": "counters-add",
+        "data": { "a": 3, "b": 2, "answer": 5, "choices": [5, 4, 6] },
+        "hint": "跟动画里是一样的:三颗和两颗合起来"
+      }
+    ]
+  }
+}

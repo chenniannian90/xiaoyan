@@ -149,12 +149,21 @@ class LearnStep {
   }
 }
 
-/// 调用一块积木并给参数。一步里可以有多块,按顺序执行(同一镜头里的连续动作)。
+/// 调用一块积木并给参数。
+///
+/// 一步里可以有多块积木,默认**一块演完再演下一块**(同一镜头里的连续动作)。
+/// 想让某块跟上一块**同时开始**,给它写 `"parallel": true` ——
+/// 比如「水变成蓝色」和「同时冒气泡」。
 class BrickCall {
-  const BrickCall({required this.brick, this.params = const <String, dynamic>{}});
+  const BrickCall({
+    required this.brick,
+    this.params = const <String, dynamic>{},
+    this.parallel = false,
+  });
 
   final String brick;
   final Map<String, dynamic> params;
+  final bool parallel;
 
   factory BrickCall.fromJson(Map<String, dynamic> json, {required String origin}) {
     final Object? params = json['params'];
@@ -163,6 +172,7 @@ class BrickCall {
       params: params == null
           ? const <String, dynamic>{}
           : _obj(params, '$origin 的 params'),
+      parallel: json['parallel'] == true,
     );
   }
 

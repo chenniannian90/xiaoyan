@@ -5,6 +5,7 @@ import '../content/models.dart';
 import '../theme/design_tokens.dart';
 import 'topic_list_page.dart';
 import 'widgets/sticker_card.dart';
+import 'wrong_book_page.dart';
 
 /// 首页:两个板块入口。数学乐园走叶子绿,科学小实验走天空蓝。
 class HomePage extends StatelessWidget {
@@ -49,6 +50,33 @@ class HomePage extends StatelessWidget {
                 subtitle: '看动画,自己动手做一遍',
                 color: DesignTokens.skyBlue,
                 onTap: () => _open(context, TopicKind.science, '科学小实验'),
+              ),
+              const SizedBox(height: DesignTokens.gapL * 1.5),
+              // 错题重练入口:数学练错过才有内容,但它是个全 App 级的入口,
+              // 放首页底部一行,不占两个大卡的位置
+              OutlinedButton.icon(
+                key: const Key('home.wrongbook'),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => WrongBookPage(library: library),
+                  ),
+                ),
+                icon: const Icon(Icons.history_edu_rounded, size: 22),
+                label: const Text('错题重练'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: DesignTokens.ink,
+                  side: const BorderSide(
+                    color: DesignTokens.outline,
+                    width: DesignTokens.borderWidth,
+                  ),
+                  minimumSize: const Size(0, 52),
+                  textStyle:
+                      (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
+                          .copyWith(fontSize: 16, fontWeight: FontWeight.w800),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(DesignTokens.radiusChip),
+                  ),
+                ),
               ),
             ],
           ),

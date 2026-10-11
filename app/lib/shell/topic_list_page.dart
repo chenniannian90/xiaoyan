@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../content/library.dart';
 import '../content/models.dart';
 import '../theme/design_tokens.dart';
+import 'journal_page.dart';
 import 'topic_detail_page.dart';
 import 'widgets/sticker_card.dart';
 
@@ -33,7 +34,21 @@ class TopicListPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        actions: <Widget>[
+          // 实验册只在科学板块露出来 —— 数学没有做—记这一步
+          if (kind == TopicKind.science)
+            IconButton(
+              key: const Key('list.journal'),
+              tooltip: '我的实验册',
+              icon: const Icon(Icons.menu_book_rounded),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const JournalPage()),
+              ),
+            ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(DesignTokens.pagePadding),
         children: <Widget>[
@@ -47,7 +62,8 @@ class TopicListPage extends StatelessWidget {
                 maxCrossAxisExtent: 240,
                 mainAxisSpacing: DesignTokens.gap,
                 crossAxisSpacing: DesignTokens.gap,
-                childAspectRatio: 0.92,
+                // 0.92 放不下占两行标题的卡(数学示例包标题长,溢出过 16px),压到 0.84
+                childAspectRatio: 0.84,
               ),
               itemCount: topics.length,
               itemBuilder: (BuildContext context, int index) => _TopicCard(topic: topics[index]),

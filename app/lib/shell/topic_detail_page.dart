@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../content/models.dart';
 import '../theme/design_tokens.dart';
+import 'experiment_page.dart';
+import 'learn_page.dart';
+import 'practice_page.dart';
 import 'widgets/sticker_card.dart';
 
-/// 内容包详情。
-/// 现在这一步只把内容**排出来给人看**——动画引擎(学)和分步引导(做)是下一步的事,
-/// 所以这一页是纯静态的,等引擎落地后由引擎页替换掉上半部分。
+/// 内容包详情:这一页是"目录"。真正的动画在 [LearnPage] 里演 ——
+/// 顶上那个大按钮进去,底下的文字留着,大人可以照着念、孩子可以自己翻。
 class TopicDetailPage extends StatelessWidget {
   const TopicDetailPage({super.key, required this.topic});
 
@@ -15,6 +17,7 @@ class TopicDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Experiment? experiment = topic.experiment;
+    final Practice? practice = topic.practice;
     return Scaffold(
       appBar: AppBar(title: Text(topic.title)),
       body: ListView(
@@ -26,6 +29,25 @@ class TopicDetailPage extends StatelessWidget {
         ),
         children: <Widget>[
           _Header(topic: topic),
+          const SizedBox(height: DesignTokens.gap),
+          _WatchButton(
+            stepCount: topic.learn.steps.length,
+            onTap: () => _watch(context),
+          ),
+          if (practice != null) ...<Widget>[
+            const SizedBox(height: DesignTokens.gapS),
+            _PracticeButton(
+              itemCount: practice.items.length,
+              onTap: () => _practice(context),
+            ),
+          ],
+          if (experiment != null) ...<Widget>[
+            const SizedBox(height: DesignTokens.gapS),
+            _DoButton(
+              stepCount: experiment.steps.length,
+              onTap: () => _do(context),
+            ),
+          ],
           const SizedBox(height: DesignTokens.gap),
           _LearnSection(steps: topic.learn.steps),
           if (experiment != null) ...<Widget>[
@@ -39,6 +61,108 @@ class TopicDetailPage extends StatelessWidget {
             _RecordOptionsSection(options: experiment.recordOptions),
           ],
         ],
+      ),
+    );
+  }
+
+  void _watch(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<bool>(builder: (_) => LearnPage(topic: topic)),
+    );
+  }
+
+  void _do(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<bool>(builder: (_) => ExperimentPage(topic: topic)),
+    );
+  }
+
+  void _practice(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => PracticePage(topic: topic)),
+    );
+  }
+}
+
+/// 「开始练一练」。数学包才有 —— 科学包没有判题这一步。
+class _PracticeButton extends StatelessWidget {
+  const _PracticeButton({required this.itemCount, required this.onTap});
+
+  final int itemCount;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.icon(
+      onPressed: onTap,
+      icon: const Icon(Icons.emoji_events_rounded, size: 26),
+      label: Text('开始练一练($itemCount 题)'),
+      style: FilledButton.styleFrom(
+        backgroundColor: DesignTokens.sunnyYellow,
+        foregroundColor: DesignTokens.ink,
+        minimumSize: const Size(0, 60),
+        // 字从主题里接,别自造(自造的没字体名,截图里会变方框)
+        textStyle: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
+            .copyWith(fontSize: 19, fontWeight: FontWeight.w900),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DesignTokens.radiusChip),
+        ),
+      ),
+    );
+  }
+}
+
+/// 「开始动手做」。科学包才有 —— 数学包没有做—记这一步。
+class _DoButton extends StatelessWidget {
+  const _DoButton({required this.stepCount, required this.onTap});
+
+  final int stepCount;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.icon(
+      onPressed: onTap,
+      icon: const Icon(Icons.science_rounded, size: 28),
+      label: Text('开始动手做($stepCount 步)'),
+      style: FilledButton.styleFrom(
+        backgroundColor: DesignTokens.skyBlue,
+        foregroundColor: Colors.white,
+        minimumSize: const Size(0, 60),
+        // 字从主题里接,别自造(自造的没字体名,截图里会变方框)
+        textStyle: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
+            .copyWith(fontSize: 19, fontWeight: FontWeight.w900),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DesignTokens.radiusChip),
+        ),
+      ),
+    );
+  }
+}
+
+/// 顶上的大按钮:「看动画」。这一页最该点的就是它。
+class _WatchButton extends StatelessWidget {
+  const _WatchButton({required this.stepCount, required this.onTap});
+
+  final int stepCount;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.icon(
+      onPressed: onTap,
+      icon: const Icon(Icons.play_circle_fill_rounded, size: 30),
+      label: Text('看动画学一学($stepCount 步)'),
+      style: FilledButton.styleFrom(
+        backgroundColor: DesignTokens.leafGreen,
+        foregroundColor: Colors.white,
+        minimumSize: const Size(0, 64),
+        // 字从主题里接,别自造(自造的没字体名,截图里会变方框)
+        textStyle: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
+            .copyWith(fontSize: 20, fontWeight: FontWeight.w900),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DesignTokens.radiusChip),
+        ),
       ),
     );
   }
